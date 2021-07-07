@@ -10,6 +10,7 @@ import (
 )
 
 type FSDocRepository struct {
+	RootDir       string
 	ValidSuffixes []string
 }
 
@@ -36,7 +37,8 @@ func collectFileNames(dir string) ([]string, error) {
 }
 
 func (r FSDocRepository) Find(keyword string) ([]entity.MatchedData, error) {
-	fileNames, err := collectFileNames("/Users/liutos/Dropbox")
+	dir := r.RootDir
+	fileNames, err := collectFileNames(dir)
 	if err != nil {
 		return nil, err
 	}

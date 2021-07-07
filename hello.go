@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"strings"
 
@@ -10,6 +11,13 @@ import (
 )
 
 type ConsolePresenter struct{}
+type CLIParam struct {
+	keyword string
+}
+
+func (p CLIParam) GetKeyword() string {
+	return p.keyword
+}
 
 func (p ConsolePresenter) PrintMatchedData(matchedData entity.MatchedData) {
 	if matchedData.IsContentMatched {
@@ -27,9 +35,19 @@ func (p ConsolePresenter) PrintMatchedData(matchedData entity.MatchedData) {
 }
 
 func main() {
+	keywordPtr := flag.String("keyword", "", "关键字")
+	rootDirPtr := flag.String("root-dir", "/Users/liutos/Dropbox", "搜索目录")
+	suffixPtr := flag.String("suffix", ".org", "后缀")
+	flag.Parse()
 	useCase := use_case.FindByKeywordUseCase{
-		Presenter:  ConsolePresenter{},
-		Repository: repository.FSDocRepository{ValidSuffixes: []string{".org"}},
+		Param: CLIParam{
+			keyword: *keywordPtr,
+		},
+		Presenter: ConsolePresenter{},
+		Repository: repository.FSDocRepository{
+			RootDir:       *rootDirPtr,
+			ValidSuffixes: []string{*suffixPtr},
+		},
 	}
 	useCase.Run()
 }
