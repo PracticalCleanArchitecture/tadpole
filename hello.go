@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/mgutz/ansi"
+
 	"example.com/tadpole/entity"
 	"example.com/tadpole/repository"
 	"example.com/tadpole/use_case"
@@ -21,12 +23,14 @@ func (p CLIParam) GetKeyword() string {
 
 func (p ConsolePresenter) PrintMatchedData(matchedData entity.MatchedData) {
 	if matchedData.IsContentMatched {
-		fmt.Println("找到了匹配内容的文件" + matchedData.Doc.Name)
+		fmt.Println(ansi.Color(matchedData.Doc.Name, "magenta"))
 		lineNums := matchedData.LineNums
 		lines := strings.Split(matchedData.Doc.Content, "\n")
 		for _, lineNum := range lineNums {
 			content := lines[lineNum]
-			fmt.Printf("%s:%d:%s\n", matchedData.Doc.Name, lineNum, content)
+			coloredLineNum := ansi.Color(fmt.Sprintf("%d", lineNum), "green")
+			coloredContent := strings.ReplaceAll(content, matchedData.Keyword, ansi.Color(matchedData.Keyword, "red"))
+			fmt.Printf("%s:%s\n", coloredLineNum, coloredContent)
 		}
 	}
 	if matchedData.IsNameMatched {

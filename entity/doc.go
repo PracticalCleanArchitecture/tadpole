@@ -13,6 +13,7 @@ type MatchedData struct {
 	Doc              Doc
 	IsContentMatched bool
 	IsNameMatched    bool
+	Keyword          string
 	LineNums         []int
 }
 

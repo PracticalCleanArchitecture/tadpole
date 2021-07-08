@@ -86,6 +86,7 @@ func (r FSDocRepository) Find(keyword string) ([]entity.MatchedData, error) {
 				Doc:              doc,
 				IsContentMatched: isContentMatched,
 				IsNameMatched:    isNameMatched,
+				Keyword:          keyword,
 				LineNums:         lineNums,
 			}
 			matchedDataList = append(matchedDataList, matchedData)
