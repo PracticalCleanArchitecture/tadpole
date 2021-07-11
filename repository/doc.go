@@ -14,7 +14,7 @@ type FSDocRepository struct {
 	ValidSuffixes []string
 }
 
-func collectFileNames(dir string) ([]string, error) {
+func (r FSDocRepository) collectFileNames(dir string) ([]string, error) {
 	fmt.Println("处理目录" + dir)
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
@@ -24,7 +24,7 @@ func collectFileNames(dir string) ([]string, error) {
 	for _, file := range files {
 		if file.IsDir() {
 			subDir := dir + string(os.PathSeparator) + file.Name()
-			subFileNames, err := collectFileNames(subDir)
+			subFileNames, err := r.collectFileNames(subDir)
 			if err != nil {
 				return nil, err
 			}
@@ -38,7 +38,7 @@ func collectFileNames(dir string) ([]string, error) {
 
 func (r FSDocRepository) Find(keyword string) ([]entity.MatchedData, error) {
 	dir := r.RootDir
-	fileNames, err := collectFileNames(dir)
+	fileNames, err := r.collectFileNames(dir)
 	if err != nil {
 		return nil, err
 	}
