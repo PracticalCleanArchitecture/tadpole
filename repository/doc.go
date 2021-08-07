@@ -14,6 +14,14 @@ type FSDocRepository struct {
 	ValidSuffixes []string
 }
 
+func (r FSDocRepository) concatenateDir(dir, file string) string {
+	if strings.HasSuffix(dir, string(os.PathSeparator)) {
+		return dir + file
+	} else {
+		return dir + string(os.PathSeparator)
+	}
+}
+
 func (r FSDocRepository) collectFileNames(dir string) ([]string, error) {
 	fmt.Println("处理目录" + dir)
 	files, err := ioutil.ReadDir(dir)
@@ -23,14 +31,14 @@ func (r FSDocRepository) collectFileNames(dir string) ([]string, error) {
 	fileNames := []string{}
 	for _, file := range files {
 		if file.IsDir() {
-			subDir := dir + string(os.PathSeparator) + file.Name()
+			subDir := r.concatenateDir(dir, file.Name())
 			subFileNames, err := r.collectFileNames(subDir)
 			if err != nil {
 				return nil, err
 			}
 			fileNames = append(fileNames, subFileNames...)
 		} else {
-			fileNames = append(fileNames, dir+string(os.PathSeparator)+file.Name())
+			fileNames = append(fileNames, r.concatenateDir(dir, file.Name()))
 		}
 	}
 	return fileNames, nil
